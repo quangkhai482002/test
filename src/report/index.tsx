@@ -4,16 +4,26 @@ import {
   Toolbar,
 } from "@syncfusion/ej2-react-documenteditor";
 import { useRef } from "react";
-import Header from "../components/Header";
+import FileSaver from "file-saver";
+import "./style.css";
+// import Header from "../components/Header";
 DocumentEditorContainerComponent.Inject(Toolbar);
 const Report = () => {
   const editorObj = useRef<DocumentEditorContainerComponent | null>(null);
+  const onSaveAsHTML = () => {
+    if (editorObj.current) {
+      // Serialize only the document content
+      const htmlContent = editorObj.current.documentEditor.serialize();
+      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+      FileSaver.saveAs(blob, "document.html");
+    }
+  };
   const onSave = () => {
     editorObj.current?.documentEditor.save("sample", "Docx");
   };
   return (
     <>
-      <Header onSave={onSave} />
+      {/* <Header onSave={onSave} /> */}
       <Box marginTop={8}>
         <Box display="flex" justifyContent="flex-end">
           <Button
@@ -30,7 +40,7 @@ const Report = () => {
             sx={{
               m: 1,
             }}
-            onClick={onSave}
+            onClick={onSaveAsHTML} // Trigger HTML download
           >
             Download as HTML
           </Button>
