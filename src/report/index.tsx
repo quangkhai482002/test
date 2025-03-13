@@ -14,11 +14,12 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
 import html2canvas from "html2canvas";
-// import Header from "../components/Header";
+import Chart from "../components/Chart";
+
 DocumentEditorContainerComponent.Inject(Toolbar);
+
 const Report = () => {
   const data = [
     { name: "Jan", sales: 4000 },
@@ -29,23 +30,47 @@ const Report = () => {
   ];
   const editorObj = useRef<DocumentEditorContainerComponent | null>(null);
   const chartRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (editorObj.current) {
       editorObj.current.documentEditor.isReadOnly = false;
     }
   }, []);
+
   const insertChartIntoDocument = async () => {
-    if (!editorObj.current || !chartRef.current) return;
+    if (!editorObj.current) return;
 
-    // Convert chart to an image
-    const chartElement = chartRef.current;
-    const canvas = await html2canvas(chartElement);
-    const imageData = canvas.toDataURL("image/png");
+    // Tạo một div ẩn để chứa biểu đồ
+    const hiddenChart = document.createElement("div");
+    hiddenChart.style.position = "absolute";
+    hiddenChart.style.left = "-9999px"; // Ẩn khỏi giao diện
+    hiddenChart.style.width = "400px";
+    hiddenChart.style.height = "300px";
+    document.body.appendChild(hiddenChart);
 
-    // Insert the image into the Document Editor
-    const editor = editorObj.current.documentEditor;
-    editor.editor.insertImage(imageData);
+    // Render biểu đồ vào div ẩn
+    const chart = <Chart />;
+
+    // Dùng ReactDOM để render biểu đồ vào div ẩn
+    import("react-dom/client").then((ReactDOM) => {
+      const root = ReactDOM.createRoot(hiddenChart);
+      root.render(chart);
+
+      // Chờ một chút để biểu đồ render
+      setTimeout(async () => {
+        const canvas = await html2canvas(hiddenChart);
+        const imageData = canvas.toDataURL("image/png");
+
+        // Chèn ảnh vào tài liệu
+        const editor = editorObj.current!.documentEditor;
+        editor.editor.insertImage(imageData);
+
+        // Xóa div ẩn sau khi chụp ảnh xong
+        document.body.removeChild(hiddenChart);
+      }, 500);
+    });
   };
+
   const onSaveAsHTML = () => {
     if (editorObj.current) {
       const htmlContent = editorObj.current.documentEditor.serialize();
@@ -53,21 +78,16 @@ const Report = () => {
       FileSaver.saveAs(blob, "document.html");
     }
   };
+
   const onSave = () => {
     editorObj.current?.documentEditor.save("sample", "Docx");
   };
+
   return (
     <>
-      {/* <Header onSave={onSave} /> */}
       <Box marginTop={8}>
         <Box display="flex" justifyContent="flex-end">
-          <Button
-            variant="contained"
-            sx={{
-              m: 1,
-            }}
-            onClick={onSave}
-          >
+          <Button variant="contained" sx={{ m: 1 }} onClick={onSave}>
             Save
           </Button>
           <Button variant="contained" onClick={onSaveAsHTML}>
@@ -75,9 +95,7 @@ const Report = () => {
           </Button>
           <Button
             variant="contained"
-            sx={{
-              m: 1,
-            }}
+            sx={{ m: 1 }}
             onClick={insertChartIntoDocument}
           >
             Insert Chart into Document
@@ -90,21 +108,6 @@ const Report = () => {
           enableToolbar={true}
           serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/"
         ></DocumentEditorContainerComponent>
-        <div
-          ref={chartRef}
-          style={{ width: 400, height: 300, marginBottom: 10 }}
-        >
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="sales" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
       </Box>
     </>
   );
