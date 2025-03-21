@@ -1,11 +1,14 @@
 import {
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
 } from "recharts";
 const Chart = () => {
   const data = [
@@ -15,15 +18,18 @@ const Chart = () => {
     { name: "Apr", sales: 2780 },
     { name: "May", sales: 1890 },
   ];
+  const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
   return (
-    <BarChart width={400} height={300} data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="sales" fill="#8884d8" />
-    </BarChart>
+    <>
+      <BarChart width={400} height={300} data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="sales" fill="#8884d8" />
+      </BarChart>
+    </>
   );
 };
 
