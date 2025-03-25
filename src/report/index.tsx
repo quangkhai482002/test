@@ -20,94 +20,107 @@ const Report = () => {
       editorObj.current.documentEditor.enableSfdtExport = false;
     }
   }, []);
-  // const insertTableWithData = () => {
-  //   if (editorObj.current && editorObj.current.documentEditor) {
-  //     const rowCount = 3;
-  //     const columnCount = 3;
 
-  //     const tableData = [
-  //       ["Tên", "Tuổi", "Thành phố"],
-  //       ["Alice", "25", "New York"],
-  //       ["Bob", "30", "London"],
-  //     ];
-
-  //     editorObj.current.documentEditor.editor.insertTable(
-  //       rowCount,
-  //       columnCount
-  //     );
-
-  //     for (let row = 0; row < rowCount; row++) {
-  //       for (let col = 0; col < columnCount; col++) {
-  //         editorObj.current.documentEditor.selection.selectTableCell();
-  //         editorObj.current.documentEditor.editor.insertText(
-  //           tableData[row][col]
-  //         );
-  //       }
-  //     }
-  //   }
-  // };
-
+  // const tableData = [
+  //   ["Name", "Age", "City"],
+  //   ["John", "25", "New York"],
+  //   ["Jane", "30", "London"],
+  //   ["Jane", "30", "London"],
+  // ];
+  const tableData = [
+    {
+      name: "a",
+      age: "8",
+      phone: "123456",
+      abc: "abc",
+      xyz: "xyz",
+      pqr: "pqr",
+    },
+    { name: "b", age: "9", phone: "13579", abc: "abc", xyz: "xyz", pqr: "pqr" },
+    {
+      name: "c",
+      age: "10",
+      phone: "246810",
+      abc: "abc",
+      xyz: "xyz",
+      pqr: "pqr",
+    },
+    {
+      name: "c",
+      age: "10",
+      phone: "246810",
+      abc: "abc",
+      xyz: "xyz",
+      pqr: "pqr",
+    },
+    {
+      name: "c",
+      age: "10",
+      phone: "246810",
+      abc: "abc",
+      xyz: "xyz",
+      pqr: "pqr",
+    },
+  ];
   // const insertTableWithData = () => {
   //   if (editorObj.current) {
   //     const editor = editorObj.current.documentEditor.editor;
-  //     const selection = editorObj.current.documentEditor.selection;
-
-  //     // Insert a 3x2 table (3 rows, 2 columns)
-  //     editor.insertTable(3, 2);
-
-  //     // Data to insert into the table
-  //     const tableData = [
-  //       ["Name", "Age"],
-  //       ["John", "25"],
-  //       ["Jane", "30"],
-  //     ];
+  //     const rowCount = tableData.length;
+  //     const columnCount = tableData[0].length;
+  //     editor.insertTable(rowCount, columnCount);
 
   //     // Insert data into the table cells
   //     for (let i = 0; i < tableData.length; i++) {
   //       for (let j = 0; j < tableData[i].length; j++) {
-  //         // Move cursor to the specific cell (row;column)
-  //         selection.select(`${i};${j};0`, `${i};${j};0`);
   //         // Insert text into the current cell
   //         editor.insertText(tableData[i][j]);
+
+  //         // Move cursor to the next cell (right) if not the last column
+  //         if (j < tableData[i].length - 1) {
+  //           moveCursorToNextCell();
+  //         }
+  //       }
+  //       // Move cursor to the next row if not the last row
+  //       if (i < tableData.length - 1) {
+  //         moveCursorToNextRow();
   //       }
   //     }
   //   }
   // };
+
+  // Function to move cursor to the next cell
   const insertTableWithData = () => {
     if (editorObj.current) {
       const editor = editorObj.current.documentEditor.editor;
+      const fields = Object.keys(tableData[0]) as Array<
+        keyof (typeof tableData)[0]
+      >;
 
-      const tableData = [
-        ["Name", "Age", "City"],
-        ["John", "25", "New York"],
-        ["Jane", "30", "London"],
-        ["Jane", "30", "London"],
-      ];
-      // Insert a 3x2 table (3 rows, 2 columns)
-      editor.insertTable(4, 3);
+      editor.insertTable(tableData.length + 1, fields.length);
 
-      // Sample data to insert into the table
+      // Add header row
+      fields.forEach((field, index) => {
+        editor.insertText(field.charAt(0).toUpperCase() + field.slice(1));
+        if (index < fields.length - 1) {
+          moveCursorToNextCell();
+        }
+      });
 
-      // Insert data into the table cells
-      for (let i = 0; i < tableData.length; i++) {
-        for (let j = 0; j < tableData[i].length; j++) {
-          // Insert text into the current cell
-          editor.insertText(tableData[i][j]);
+      // Move to the next row (first data row)
+      moveCursorToNextRow();
 
-          // Move cursor to the next cell (right) if not the last column
-          if (j < tableData[i].length - 1) {
+      // Populate the table with data
+      tableData.forEach((item) => {
+        fields.forEach((field: keyof typeof item, index) => {
+          editor.insertText(item[field]);
+          if (index < fields.length - 1) {
             moveCursorToNextCell();
           }
-        }
-        // Move cursor to the next row if not the last row
-        if (i < tableData.length - 1) {
-          moveCursorToNextRow();
-        }
-      }
+        });
+        moveCursorToNextRow();
+      });
     }
   };
-
-  // Function to move cursor to the next cell
   const moveCursorToNextCell = () => {
     if (editorObj.current) {
       const selection = editorObj.current.documentEditor.selection;
@@ -131,11 +144,6 @@ const Report = () => {
       selection.select(newOffset, newOffset); // Move cursor to next row
     }
   };
-
-  // Use useEffect to insert the table when the component mounts
-  // useEffect(() => {
-  //   insertTableWithData();
-  // }, []);
 
   return (
     <>
@@ -164,28 +172,3 @@ const Report = () => {
 };
 
 export default Report;
-
-// useEffect(() => {
-//   if (editorObj.current && editorObj.current.documentEditor) {
-//     const documentEditor: DocumentEditor = editorObj.current.documentEditor;
-
-//     const rowCount = 4;
-//     const columnCount = 3;
-
-//     const tableData = [
-//       ["Tên", "Tuổi", "Thành phố"],
-//       ["Alice", "30", "New York"],
-//       ["Bob", "25", "London"],
-//       ["Charlie", "35", "Tokyo"],
-//     ];
-
-//     documentEditor.editor.insertTable(rowCount, columnCount);
-
-//     for (let row = 0; row < rowCount; row++) {
-//       for (let col = 0; col < columnCount; col++) {
-//         documentEditor.selection.selectTableCell();
-//         documentEditor.editor.insertText(tableData[row][col]);
-//       }
-//     }
-//   }
-// }, []);
