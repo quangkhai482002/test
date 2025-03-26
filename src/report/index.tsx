@@ -2,12 +2,12 @@ import { Box, Button } from "@mui/material";
 import {
   DocumentEditorContainerComponent,
   Toolbar,
-  DocumentEditor,
 } from "@syncfusion/ej2-react-documenteditor";
 // import FileSaver from "file-saver";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 // import ChartModal from "../components/ChartModal";
 import "./style.css";
+import ToolBar from "../components/toolBar/ToolBar";
 
 DocumentEditorContainerComponent.Inject(Toolbar);
 
@@ -21,46 +21,12 @@ const Report = () => {
     }
   }, []);
 
-  // const tableData = [
-  //   ["Name", "Age", "City"],
-  //   ["John", "25", "New York"],
-  //   ["Jane", "30", "London"],
-  //   ["Jane", "30", "London"],
-  // ];
   const tableData = [
-    {
-      name: "a",
-      age: "8",
-      phone: "123456",
-      abc: "abc",
-      xyz: "xyz",
-      pqr: "pqr",
-    },
-    { name: "b", age: "9", phone: "13579", abc: "abc", xyz: "xyz", pqr: "pqr" },
-    {
-      name: "c",
-      age: "10",
-      phone: "246810",
-      abc: "abc",
-      xyz: "xyz",
-      pqr: "pqr",
-    },
-    {
-      name: "c",
-      age: "10",
-      phone: "246810",
-      abc: "abc",
-      xyz: "xyz",
-      pqr: "pqr",
-    },
-    {
-      name: "c",
-      age: "10",
-      phone: "246810",
-      abc: "abc",
-      xyz: "xyz",
-      pqr: "pqr",
-    },
+    { name: "a", age: "8", phone: "123456" },
+    { name: "b", age: "9", phone: "13579" },
+    { name: "c", age: "10", phone: "246810" },
+    { name: "c", age: "10", phone: "246810" },
+    { name: "c", age: "10", phone: "246810" },
   ];
   // const insertTableWithData = () => {
   //   if (editorObj.current) {
@@ -92,31 +58,27 @@ const Report = () => {
   const insertTableWithData = () => {
     if (editorObj.current) {
       const editor = editorObj.current.documentEditor.editor;
-      const fields = Object.keys(tableData[0]) as Array<
-        keyof (typeof tableData)[0]
-      >;
 
-      editor.insertTable(tableData.length + 1, fields.length);
+      // Insert a table with 4 rows (1 header + 3 data rows) and 3 columns
+      editor.insertTable(tableData.length + 1, 3);
 
       // Add header row
-      fields.forEach((field, index) => {
-        editor.insertText(field.charAt(0).toUpperCase() + field.slice(1));
-        if (index < fields.length - 1) {
-          moveCursorToNextCell();
-        }
-      });
+      editor.insertText("Name");
+      moveCursorToNextCell();
+      editor.insertText("Age");
+      moveCursorToNextCell();
+      editor.insertText("Phone");
 
       // Move to the next row (first data row)
       moveCursorToNextRow();
 
       // Populate the table with data
       tableData.forEach((item) => {
-        fields.forEach((field: keyof typeof item, index) => {
-          editor.insertText(item[field]);
-          if (index < fields.length - 1) {
-            moveCursorToNextCell();
-          }
-        });
+        editor.insertText(item.name);
+        moveCursorToNextCell();
+        editor.insertText(item.age);
+        moveCursorToNextCell();
+        editor.insertText(item.phone);
         moveCursorToNextRow();
       });
     }
@@ -156,6 +118,7 @@ const Report = () => {
           >
             Insert Table
           </Button>
+          <ToolBar />
         </Box>
 
         {/* Document Editor */}
