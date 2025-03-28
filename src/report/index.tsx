@@ -3,16 +3,62 @@ import {
   DocumentEditorContainerComponent,
   Toolbar,
 } from "@syncfusion/ej2-react-documenteditor";
-// import FileSaver from "file-saver";
-import { useEffect, useRef } from "react";
-// import ChartModal from "../components/ChartModal";
+import { useEffect, useRef, useState } from "react";
 import "./style.css";
-import ToolBar from "../components/toolBar/ToolBar";
+import axios from "axios";
 
 DocumentEditorContainerComponent.Inject(Toolbar);
+interface TableData {
+  name: string;
+  age: string;
+  phone_number: Array<string>;
+  email: number;
+  date: Date;
+  id: string;
+}
+
+interface TransformedTableData {
+  Name: string;
+  Age: string;
+  "Phone number": string;
+  Email: string;
+  Date: string;
+  Id: string;
+}
 
 const Report = () => {
   const editorObj = useRef<DocumentEditorContainerComponent | null>(null);
+  const [data, setData] = useState<TableData[]>([]);
+  const [transformedData, setTransformedData] = useState<
+    TransformedTableData[]
+  >([]);
+  const fetchData = async () => {
+    const res = await axios.get(
+      "https://675e7ce663b05ed0797a446e.mockapi.io/account"
+    );
+    setData(res.data);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  console.log(data);
+  useEffect(() => {
+    const newTransformedData = data.map((item) => ({
+      Name: String(item.name),
+      Age: String(item.age),
+      "Phone number": Array.isArray(item.phone_number)
+        ? item.phone_number.join(", ")
+        : String(item.phone_number),
+      Email: String(item.email),
+      Date:
+        item.date instanceof Date ? item.date.toISOString() : String(item.date),
+      Id: String(item.id),
+    }));
+    setTransformedData(newTransformedData);
+  }, [data]);
+
+  console.log("Original Data:", data);
+  console.log("Transformed Data:", transformedData);
 
   useEffect(() => {
     if (editorObj.current) {
@@ -28,61 +74,39 @@ const Report = () => {
     { name: "c", age: "10", phone: "246810" },
     { name: "c", age: "10", phone: "246810" },
   ];
-  // const insertTableWithData = () => {
-  //   if (editorObj.current) {
-  //     const editor = editorObj.current.documentEditor.editor;
-  //     const rowCount = tableData.length;
-  //     const columnCount = tableData[0].length;
-  //     editor.insertTable(rowCount, columnCount);
-
-  //     // Insert data into the table cells
-  //     for (let i = 0; i < tableData.length; i++) {
-  //       for (let j = 0; j < tableData[i].length; j++) {
-  //         // Insert text into the current cell
-  //         editor.insertText(tableData[i][j]);
-
-  //         // Move cursor to the next cell (right) if not the last column
-  //         if (j < tableData[i].length - 1) {
-  //           moveCursorToNextCell();
-  //         }
-  //       }
-  //       // Move cursor to the next row if not the last row
-  //       if (i < tableData.length - 1) {
-  //         moveCursorToNextRow();
-  //       }
-  //     }
-  //   }
-  // };
-
-  // Function to move cursor to the next cell
   const insertTableWithData = () => {
     if (editorObj.current) {
       const editor = editorObj.current.documentEditor.editor;
+      const fields = Object.keys(tableData[0]) as Array<
+        keyof (typeof tableData)[0]
+      >;
 
-      // Insert a table with 4 rows (1 header + 3 data rows) and 3 columns
-      editor.insertTable(tableData.length + 1, 3);
+      editor.insertTable(tableData.length + 1, fields.length);
 
       // Add header row
-      editor.insertText("Name");
-      moveCursorToNextCell();
-      editor.insertText("Age");
-      moveCursorToNextCell();
-      editor.insertText("Phone");
+      fields.forEach((field, index) => {
+        editor.insertText(field.charAt(0).toUpperCase() + field.slice(1));
+        if (index < fields.length - 1) {
+          moveCursorToNextCell();
+        }
+      });
 
       // Move to the next row (first data row)
       moveCursorToNextRow();
 
       // Populate the table with data
       tableData.forEach((item) => {
-        editor.insertText(item.name);
-        moveCursorToNextCell();
-        editor.insertText(item.age);
-        moveCursorToNextCell();
-        editor.insertText(item.phone);
+        fields.forEach((field: keyof typeof item, index) => {
+          editor.insertText(item[field]);
+          if (index < fields.length - 1) {
+            moveCursorToNextCell();
+          }
+        });
         moveCursorToNextRow();
       });
     }
   };
+
   const moveCursorToNextCell = () => {
     if (editorObj.current) {
       const selection = editorObj.current.documentEditor.selection;
@@ -118,10 +142,8 @@ const Report = () => {
           >
             Insert Table
           </Button>
-          <ToolBar />
         </Box>
 
-        {/* Document Editor */}
         <DocumentEditorContainerComponent
           ref={editorObj}
           height="100vh"
