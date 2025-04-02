@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import "../report/style.css";
 import html2canvas from "html2canvas";
 import Chart from "../components/Chart";
-import _ from "lodash"; // Import Lodash
+import _ from "lodash";
 
 DocumentEditorContainerComponent.Inject(Toolbar);
 
@@ -19,7 +19,13 @@ const FixLoading = () => {
   useEffect(() => {
     if (editorObj.current) {
       editorObj.current.documentEditor.isReadOnly = false;
-      editorObj.current.documentEditor.enableSfdtExport = false;
+      // editorObj.current.documentEditor.enableSfdtExport = false;
+
+      editorObj.current.documentEditor.contentChange = () => {
+        console.log("Content changed!");
+        const sfdtContent = editorObj.current?.documentEditor.serialize();
+        console.log("Updated SFDT:", sfdtContent);
+      };
     }
   }, []);
 
@@ -48,7 +54,15 @@ const FixLoading = () => {
       debouncedInsertImage.cancel(); // Cancel any pending debounced calls
     };
   }, []);
-
+  const handleGetContent = () => {
+    if (editorObj.current) {
+      const editor = editorObj.current.documentEditor;
+      // const textContent = editor.getText();
+      const sfdtContent = editor.serialize();
+      // console.log("Text Content:", textContent);
+      console.log("SFDT Content:", sfdtContent);
+    }
+  };
   return (
     <>
       <Box marginTop={8}>
@@ -60,6 +74,9 @@ const FixLoading = () => {
             disabled={isLoading}
           >
             Insert Chart
+          </Button>
+          <Button variant="contained" sx={{ m: 1 }} onClick={handleGetContent}>
+            Get Content
           </Button>
         </Box>
         <div
