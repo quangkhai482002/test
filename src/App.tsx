@@ -3,7 +3,7 @@ import Report from "./report";
 import FixLoading from "./fixLoading";
 
 function App() {
-  return <FixLoading />;
+  return <Report />;
 }
 
 export default App;

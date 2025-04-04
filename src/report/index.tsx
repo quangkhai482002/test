@@ -4,9 +4,8 @@ import {
   Toolbar,
 } from "@syncfusion/ej2-react-documenteditor";
 import { useEffect, useRef, useState } from "react";
-import "./style.css";
-import axios from "axios";
 import ChartModal from "../components/ChartModal";
+import "./style.css";
 
 DocumentEditorContainerComponent.Inject(Toolbar);
 
@@ -70,30 +69,64 @@ const Report = () => {
         const fields = Object.keys(tableData[0]) as Array<
           keyof (typeof tableData)[0]
         >;
-
+        const rowCount = tableData.length + 1; // +1 for header
+        const colCount = fields.length;
         editor.insertTable(tableData.length + 1, fields.length);
+        const sfdt = {
+          sections: [
+            {
+              blocks: [
+                {
+                  rows: Array.from({ length: rowCount }, (_, rowIndex) => ({
+                    rowFormat: {},
+                    cells: Array.from({ length: colCount }, (_, colIndex) => {
+                      const text =
+                        rowIndex === 0
+                          ? fields[colIndex].charAt(0).toUpperCase() +
+                            fields[colIndex].slice(1) // Header
+                          : tableData[rowIndex - 1][fields[colIndex]]; // Data
+                      return {
+                        blocks: [
+                          {
+                            inlines: [
+                              {
+                                text: String(text), // Ensure text is a string
+                              },
+                            ],
+                          },
+                        ],
+                      };
+                    }),
+                  })),
+                },
+              ],
+            },
+          ],
+        };
+        const sfdtString = JSON.stringify(sfdt);
+        editorObj.current.documentEditor.open(sfdtString);
 
-        // Add header row
-        fields.forEach((field, index) => {
-          editor.insertText(field.charAt(0).toUpperCase() + field.slice(1));
-          if (index < fields.length - 1) {
-            moveCursorToNextCell();
-          }
-        });
+        // // Add header row
+        // fields.forEach((field, index) => {
+        //   editor.insertText(field.charAt(0).toUpperCase() + field.slice(1));
+        //   if (index < fields.length - 1) {
+        //     moveCursorToNextCell();
+        //   }
+        // });
 
-        // Move to the next row (first data row)
-        moveCursorToNextRow();
+        // // Move to the next row (first data row)
+        // moveCursorToNextRow();
 
-        // Populate the table with data
-        tableData.forEach((item) => {
-          fields.forEach((field: keyof typeof item, index) => {
-            editor.insertText(item[field]);
-            if (index < fields.length - 1) {
-              moveCursorToNextCell();
-            }
-          });
-          moveCursorToNextRow();
-        });
+        // // Populate the table with data
+        // tableData.forEach((item) => {
+        //   fields.forEach((field: keyof typeof item, index) => {
+        //     editor.insertText(item[field]);
+        //     if (index < fields.length - 1) {
+        //       moveCursorToNextCell();
+        //     }
+        //   });
+        //   moveCursorToNextRow();
+        // });
       }
     } catch (error) {
       console.error("Error inserting table:", error);
@@ -102,29 +135,29 @@ const Report = () => {
     }
   };
 
-  const moveCursorToNextCell = () => {
-    if (editorObj.current) {
-      const selection = editorObj.current.documentEditor.selection;
-      const startOffset = selection.startOffset;
-      const offsetArray = startOffset.split(";");
-      offsetArray[3] = (parseInt(offsetArray[3]) + 1).toString(); // Increment cell index
-      const newOffset = offsetArray.join(";");
-      selection.select(newOffset, newOffset); // Move cursor to next cell
-    }
-  };
+  // const moveCursorToNextCell = () => {
+  //   if (editorObj.current) {
+  //     const selection = editorObj.current.documentEditor.selection;
+  //     const startOffset = selection.startOffset;
+  //     const offsetArray = startOffset.split(";");
+  //     offsetArray[3] = (parseInt(offsetArray[3]) + 1).toString(); // Increment cell index
+  //     const newOffset = offsetArray.join(";");
+  //     selection.select(newOffset, newOffset); // Move cursor to next cell
+  //   }
+  // };
 
-  // Function to move cursor to the next row (first cell)
-  const moveCursorToNextRow = () => {
-    if (editorObj.current) {
-      const selection = editorObj.current.documentEditor.selection;
-      const startOffset = selection.startOffset;
-      const offsetArray = startOffset.split(";");
-      offsetArray[2] = (parseInt(offsetArray[2]) + 1).toString(); // Increment row index
-      offsetArray[3] = "0"; // Reset to first cell in the row
-      const newOffset = offsetArray.join(";");
-      selection.select(newOffset, newOffset); // Move cursor to next row
-    }
-  };
+  // // Function to move cursor to the next row (first cell)
+  // const moveCursorToNextRow = () => {
+  //   if (editorObj.current) {
+  //     const selection = editorObj.current.documentEditor.selection;
+  //     const startOffset = selection.startOffset;
+  //     const offsetArray = startOffset.split(";");
+  //     offsetArray[2] = (parseInt(offsetArray[2]) + 1).toString(); // Increment row index
+  //     offsetArray[3] = "0"; // Reset to first cell in the row
+  //     const newOffset = offsetArray.join(";");
+  //     selection.select(newOffset, newOffset); // Move cursor to next row
+  //   }
+  // };
 
   return (
     <>
