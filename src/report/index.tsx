@@ -15,13 +15,14 @@ const Report = () => {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isReadOnly, setIsReadOnly] = useState(false);
 
-  useEffect(() => {
-    if (editorObj.current) {
-      editorObj.current.documentEditor.isReadOnly = false;
-      editorObj.current.documentEditor.enableSfdtExport = false;
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (editorObj.current) {
+  //     editorObj.current.documentEditor.isReadOnly = isReadOnly;
+  //     editorObj.current.documentEditor.enableSfdtExport = false;
+  //   }
+  // }, [isReadOnly]);
 
   const handleInsertImage = (imageData: string) => {
     if (editorObj.current) {
@@ -134,6 +135,16 @@ const Report = () => {
       setIsLoaded(false);
     }
   };
+  // const toggleReadOnly = () => {
+  //   setIsReadOnly((prev) => !prev); // Toggle read-only state
+  // };
+  const toggleReadOnly = () => {
+    if (editorObj.current) {
+      const newReadOnlyState = !editorObj.current.documentEditor.isReadOnly;
+      editorObj.current.documentEditor.isReadOnly = newReadOnlyState;
+      setIsReadOnly(newReadOnlyState);
+    }
+  };
 
   // const moveCursorToNextCell = () => {
   //   if (editorObj.current) {
@@ -178,6 +189,9 @@ const Report = () => {
             disabled={isLoaded}
           >
             {isLoaded ? "Inserting..." : "Insert Chart"}
+          </Button>
+          <Button variant="contained" sx={{ m: 1 }} onClick={toggleReadOnly}>
+            {isReadOnly ? "Make Editable" : "Make Read-Only"}
           </Button>
         </Box>
         <ChartModal
