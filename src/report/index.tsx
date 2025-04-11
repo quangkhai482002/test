@@ -6,6 +6,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { data } from "../format";
+// import document from "../doc/NewMicrosoftWordDocument.docx";
 
 DocumentEditorContainerComponent.Inject(Toolbar);
 
@@ -14,9 +15,23 @@ const Report = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [content, setContent] = useState<string>("");
 
+  // useEffect(() => {
+  //   if (editorObj.current) {
+  //     editorObj.current.documentEditor.open(JSON.stringify(data));
+  //   }
+  // }, []);
   useEffect(() => {
     if (editorObj.current) {
-      editorObj.current.documentEditor.open(JSON.stringify(data));
+      const editor = editorObj.current.documentEditor;
+      // Thiết lập định dạng trang A4
+      editor.sectionFormat = {
+        pageWidth: 595, // Chiều rộng A4 (210mm ~ 595 điểm)
+        pageHeight: 842, // Chiều cao A4 (297mm ~ 842 điểm)
+        leftMargin: 72, // Lề trái (1 inch = 72 điểm)
+        rightMargin: 72, // Lề phải
+        topMargin: 72, // Lề trên
+        bottomMargin: 72, // Lề dưới
+      };
     }
   }, []);
 
@@ -109,6 +124,12 @@ const Report = () => {
     }
   };
 
+  // const handleDocumentReady = () => {
+  //   if (editorObj.current) {
+  //     editorObj.current.documentEditor.open(document);
+  //   }
+  // };
+
   return (
     <>
       <Box marginTop={8}>
@@ -121,6 +142,14 @@ const Report = () => {
           >
             {isLoaded ? "Inserting..." : "Insert Table"}
           </Button>
+          {/* <Button
+            variant="contained"
+            sx={{ m: 1 }}
+            onClick={handleDocumentReady}
+            disabled={isLoaded}
+          >
+            {isLoaded ? "Inserting..." : "Insert document"}
+          </Button> */}
         </Box>
 
         <DocumentEditorContainerComponent
