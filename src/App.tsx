@@ -1,9 +1,10 @@
 import "./App.css";
-import Report from "./report";
-import FixLoading from "./fixLoading";
+import TableData from "./table/TableData";
+// import Report from "./report";
+// import FixLoading from "./fixLoading";
 
 function App() {
-  return <Report />;
+  return <TableData />;
 }
 
 export default App;

@@ -6,7 +6,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import "./style.css";
 import { data } from "../format";
-// import document from "../doc/NewMicrosoftWordDocument.docx";
 
 DocumentEditorContainerComponent.Inject(Toolbar);
 
