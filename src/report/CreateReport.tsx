@@ -1,0 +1,124 @@
+import { Box, Button, TextField } from "@mui/material";
+import {
+  DocumentEditorContainerComponent,
+  Toolbar,
+} from "@syncfusion/ej2-react-documenteditor";
+import { useEffect, useRef, useState } from "react";
+import { data } from "../format";
+import { createReport } from "../services/api";
+import "./style.css";
+import { useNavigate } from "react-router-dom";
+
+DocumentEditorContainerComponent.Inject(Toolbar);
+
+const CreateReport = () => {
+  const editorObj = useRef<DocumentEditorContainerComponent | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string>("");
+  const [shouldUpdateContent, setShouldUpdateContent] =
+    useState<boolean>(false); // State flag
+  const handleCreateReport = async () => {
+    try {
+      setIsLoaded(true);
+      if (editorObj.current) {
+        const editor = editorObj.current.documentEditor.serialize();
+        setContent(editor);
+        const reportData = {
+          name,
+          content,
+          image: imgUrl,
+        };
+        const res = await createReport(reportData);
+        console.log("Report created successfully:", res);
+      }
+    } catch (error) {
+      console.error("Error creating report:", error);
+    } finally {
+      setIsLoaded(false);
+    }
+  };
+  const ContentChange = () => {
+    if (!editorObj.current) return;
+    setContent(editorObj.current?.documentEditor.serialize());
+    setImgUrl(editorObj.current?.documentEditor?.exportAsImage(1, "Png").src);
+    console.log("Updated SFDT:", content);
+  };
+  const handleDocumentChange = () => {
+    if (editorObj.current) {
+      const newContent = editorObj.current.documentEditor.serialize();
+      setContent(newContent);
+      setImgUrl(editorObj.current.documentEditor.exportAsImage(1, "Png").src);
+      console.log("Document changed, updated SFDT:", newContent);
+    }
+  };
+  const insertTableWithData = () => {
+    if (editorObj.current) {
+      editorObj.current.documentEditor.open(JSON.stringify(data));
+      setShouldUpdateContent(true);
+    }
+  };
+  useEffect(() => {
+    if (shouldUpdateContent && editorObj.current) {
+      const newContent = editorObj.current.documentEditor.serialize();
+      setContent(newContent);
+      setImgUrl(editorObj.current.documentEditor.exportAsImage(1, "Png").src);
+      console.log("Content updated after insert:", newContent);
+      setShouldUpdateContent(false); // Reset flag
+    }
+  }, [shouldUpdateContent]);
+  const navigate = useNavigate();
+
+  return (
+    <Box marginTop={8}>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          variant="contained"
+          sx={{ m: 1 }}
+          onClick={insertTableWithData}
+          disabled={isLoaded}
+        >
+          {isLoaded ? "Inserting..." : "Insert Table"}
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ m: 1 }}
+          onClick={handleCreateReport}
+          disabled={isLoaded}
+        >
+          Save
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ m: 1 }}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          Home
+        </Button>
+      </Box>
+      <Box display="flex" gap={2} marginBottom={2}>
+        <TextField
+          variant="outlined"
+          type="text"
+          placeholder="Report Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </Box>
+      <DocumentEditorContainerComponent
+        ref={editorObj}
+        height="100vh"
+        width="100%"
+        enableToolbar={true}
+        contentChange={ContentChange}
+        // documentChange={handleDocumentChange}
+        serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/"
+      ></DocumentEditorContainerComponent>
+    </Box>
+  );
+};
+
+export default CreateReport;

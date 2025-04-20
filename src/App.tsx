@@ -1,10 +1,19 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-// import TableData from "./table/TableData";
 import Report from "./report";
-// import FixLoading from "./fixLoading";
+import CreateReport from "./report/CreateReport";
+import DetailReport from "./report/DetailReport";
 
 function App() {
-  return <Report />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Report />}></Route>
+        <Route path="/create" element={<CreateReport />}></Route>
+        <Route path="/edit/:id" element={<DetailReport />}></Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
