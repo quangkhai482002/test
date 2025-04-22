@@ -4,13 +4,17 @@ import {
   Card,
   CardContent,
   CardMedia,
+  FormControl,
   Grid2,
+  InputLabel,
+  MenuItem,
+  Select,
   Typography,
 } from "@mui/material";
-import "./style.css";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteReport, fetchReport } from "../services/api";
-import { useEffect, useState } from "react";
+import "./style.css";
 
 const Report = () => {
   const [data, setData] = useState<any[]>([]);
@@ -31,6 +35,19 @@ const Report = () => {
     handleGetReport();
   }, []);
   const navigate = useNavigate();
+  const colors = [
+    { name: "Default", hex: "", isDefault: true },
+    { name: "Red", hex: "#F44336" },
+    { name: "Green", hex: "#4CAF50" },
+    { name: "Blue", hex: "#2196F3" },
+    { name: "Purple", hex: "#9C27B0" },
+    { name: "Orange", hex: "#FF9800" },
+  ];
+  const [selectedColor, setSelectedColor] = useState(colors[0].hex);
+
+  const handleChange = (event: any) => {
+    setSelectedColor(event.target.value);
+  };
   return (
     <Box p={3} marginTop={8}>
       <Box
@@ -75,6 +92,168 @@ const Report = () => {
           </Grid2>
         ))}
       </Grid2>
+      <FormControl sx={{ minWidth: 120 }} size="small">
+        {/* <InputLabel id="color-select-label">Chọn màu</InputLabel> */}
+        <Select
+          labelId="color-select-label"
+          value={selectedColor}
+          // label="Chọn màu"
+          onChange={handleChange}
+          renderValue={(selected) => {
+            const color = colors.find((c) => c.hex === selected);
+            return (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {color?.hex ? (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      bgcolor: selected,
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      border: "1px solid #ccc",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <Typography>{color?.name}</Typography>
+              </Box>
+            );
+          }}
+        >
+          {colors.map((color) => (
+            <MenuItem key={color.name} value={color.hex}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {color.hex ? (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      bgcolor: color.hex,
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      border: "1px solid #ccc",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <Typography>
+                  {color.name}
+                  {color.hex && ` (${color.hex})`}
+                </Typography>
+              </Box>
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <FormControl sx={{ minWidth: 200 }}>
+        <InputLabel id="color-select-label">Chọn màu</InputLabel>
+        <Select
+          labelId="color-select-label"
+          value={selectedColor}
+          label="Chọn màu"
+          onChange={handleChange}
+        >
+          {colors.map((color) => (
+            <MenuItem key={color.hex} value={color.hex}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {!color.isDefault && (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      backgroundColor: color.hex,
+                      border: "1px solid #ccc",
+                      borderRadius: 2,
+                    }}
+                  />
+                )}
+                <span>{color.name}</span>
+                {!color.isDefault && <span>({color.hex})</span>}
+              </Box>
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <FormControl sx={{ minWidth: 120 }} size="small">
+        <Select
+          labelId="color-select-label"
+          value={selectedColor}
+          onChange={handleChange}
+          renderValue={(selected) => {
+            const color = colors.find((c) => c.hex === selected) || colors[0]; // Mặc định là Default nếu không tìm thấy
+            return (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {color.hex ? (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      bgcolor: selected,
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      border: "1px solid #ccc",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <Typography>{color.name}</Typography>{" "}
+                {/* Luôn hiển thị tên, kể cả Default */}
+              </Box>
+            );
+          }}
+        >
+          {colors.map((color) => (
+            <MenuItem key={color.name} value={color.hex}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {color.hex ? (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      bgcolor: color.hex,
+                      borderRadius: "50%",
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      border: "1px solid #ccc",
+                      borderRadius: "50%",
+                    }}
+                  />
+                )}
+                <Typography>
+                  {color.name}
+                  {color.hex && ` (${color.hex})`}
+                </Typography>
+              </Box>
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </Box>
   );
 };
