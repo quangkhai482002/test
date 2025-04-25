@@ -259,3 +259,19 @@ const Report = () => {
 };
 
 export default Report;
+
+const data = {
+  intro: { type: "1", Product: "abc", name: "Khai" },
+  Crimital: [
+    { name: "abc.com", age: "8", adrress: "123 Abc" },
+    { name: "abc1.com", age: "81", adrress: "123 Abc1" },
+  ],
+  Indicator: [
+    { Ip: "1.1.10", domain: "abc.com" },
+    { Ip: "1.1.11", domain: "abc1.com" },
+  ],
+};
+
+const newData = Object.entries(data).map(([key, value]) => ({ [key]: value }));
+
+console.log(JSON.stringify(newData, null, 2));
