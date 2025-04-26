@@ -305,7 +305,7 @@ const detail = [
 ];
 
 // Hàm tạo header từ phần tử đầu tiên của content
-const createHeader = (contentItem) => ({
+const createHeader = (contentItem: { header: any; content?: string }) => ({
   b: [
     {
       pf: {
@@ -351,7 +351,7 @@ const createHeader = (contentItem) => ({
 });
 
 // Hàm tạo row từ mỗi phần tử trong content
-const createRow = (contentItem) => ({
+const createRow = (contentItem: { header?: string; content: any }) => ({
   b: [
     {
       pf: {
