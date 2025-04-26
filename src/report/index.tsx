@@ -275,3 +275,167 @@ const data = {
 const newData = Object.entries(data).map(([key, value]) => ({ [key]: value }));
 
 console.log(JSON.stringify(newData, null, 2));
+
+// Dữ liệu đầu vào
+const detail = [
+  {
+    name: "Header 1",
+    content: [
+      { header: "header1", content: "content1" },
+      { header: "header2", content: "content2" },
+      { header: "header3", content: "content3" },
+    ],
+  },
+  {
+    name: "Header 2",
+    content: [
+      { header: "header1", content: "content1" },
+      { header: "header2", content: "content2" },
+      { header: "header3", content: "content3" },
+    ],
+  },
+  {
+    name: "Header 3",
+    content: [
+      { header: "header1", content: "content1" },
+      { header: "header2", content: "content2" },
+      { header: "header3", content: "content3" },
+    ],
+  },
+];
+
+// Hàm tạo header từ phần tử đầu tiên của content
+const createHeader = (contentItem) => ({
+  b: [
+    {
+      pf: {
+        bdrs: { tp: {}, lt: {}, rg: {}, bt: {}, h: {}, v: {} },
+        lin: 0,
+        fin: 0,
+        stn: "Normal",
+        lif: {},
+      },
+      cf: {
+        b: true,
+        ff: "Times New Roman",
+        ffbi: "Times New Roman",
+        ffa: "Times New Roman",
+        ffnfe: "Times New Roman",
+        fffe: "Times New Roman",
+      },
+      i: [
+        {
+          cf: {
+            b: true,
+            ff: "Times New Roman",
+            bi: false,
+            ffbi: "Times New Roman",
+            ffa: "Times New Roman",
+            ffnfe: "Times New Roman",
+            fffe: "Times New Roman",
+          },
+          tlp: contentItem.header, // Lấy header từ content
+        },
+      ],
+    },
+  ],
+  tcpr: {
+    bdrs: { tp: {}, lt: {}, rg: {}, bt: {}, dd: {}, du: {}, h: {}, v: {} },
+    sd: { bgc: "#d9d9d9", fgc: "empty", t: 0 },
+    pw: 156,
+    cw: 156,
+    colsp: 1,
+    rwsp: 1,
+  },
+  ci: 0,
+});
+
+// Hàm tạo row từ mỗi phần tử trong content
+const createRow = (contentItem) => ({
+  b: [
+    {
+      pf: {
+        bdrs: { tp: {}, lt: {}, rg: {}, bt: {}, h: {}, v: {} },
+        lin: 0,
+        fin: 0,
+        stn: "Normal",
+        lif: {},
+      },
+      cf: {
+        b: true,
+        ff: "Times New Roman",
+        ffbi: "Times New Roman",
+        ffa: "Times New Roman",
+        ffnfe: "Times New Roman",
+        fffe: "Times New Roman",
+      },
+      i: [
+        {
+          cf: {
+            b: true,
+            ff: "Times New Roman",
+            bi: false,
+            ffbi: "Times New Roman",
+            ffa: "Times New Roman",
+            ffnfe: "Times New Roman",
+            fffe: "Times New Roman",
+          },
+          tlp: contentItem.content, // Lấy content từ content
+        },
+      ],
+    },
+  ],
+  tcpr: {
+    bdrs: { tp: {}, lt: {}, rg: {}, bt: {}, dd: {}, du: {}, h: {}, v: {} },
+    sd: { bgc: "#d9d9d9", fgc: "empty", t: 0 },
+    pw: 156,
+    cw: 156,
+    colsp: 1,
+    rwsp: 1,
+  },
+  ci: 0,
+});
+
+// Tạo cấu trúc SFDT
+const sfdt = {
+  optimizeSfdt: true,
+  sec: [
+    {
+      secpr: {
+        pw: 612,
+        ph: 792,
+        lm: 72,
+        rm: 72,
+        tm: 72,
+        bm: 72,
+        hd: 36,
+        fd: 36,
+        dfp: 0,
+        doep: 0,
+        bi: 0,
+        bc: "NewPage",
+        enf: 2,
+        fnf: 0,
+        rif: 0,
+        rie: 0,
+        ifn: 1,
+        ien: 1,
+        pgns: "Arabic",
+        ncols: 1,
+        eqw: 1,
+        lbtc: 0,
+        cols: [],
+      },
+      b: detail.map((item) => ({
+        r: [
+          {
+            c: [
+              createHeader(item.content[0]), // Tạo header từ phần tử đầu tiên của content
+              ...item.content.map((contentItem) => createRow(contentItem)), // Tạo rows từ tất cả phần tử trong content
+            ],
+          },
+        ],
+      })),
+    },
+  ],
+};
