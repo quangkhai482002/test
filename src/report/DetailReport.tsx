@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { data } from "../format";
 import { fetchReportById, updateReport } from "../services/api";
-import "./style.css";
 
 const DetailReport = () => {
   const { id } = useParams();
@@ -62,33 +61,6 @@ const DetailReport = () => {
     setImgUrl(editorObj.current?.documentEditor?.exportAsImage(1, "Png").src);
     console.log("Updated SFDT:", content);
   };
-  const handleDocumentChange = () => {
-    if (editorObj.current) {
-      const newContent = editorObj.current.documentEditor.serialize();
-      setContent(newContent);
-      setTimeout(() => {
-        try {
-          if (!editorObj.current) return;
-          const pageCount = editorObj.current.documentEditor.pageCount;
-          if (pageCount > 0) {
-            const imageSrc = editorObj.current.documentEditor.exportAsImage(
-              1,
-              "Png"
-            ).src;
-            setImgUrl(imageSrc);
-            console.log("Image updated:", imageSrc);
-          } else {
-            console.warn("No valid content to export as image.");
-            setImgUrl("");
-          }
-        } catch (error) {
-          console.error("Error exporting image:", error);
-        }
-      }, 300);
-      // setImgUrl(editorObj.current.documentEditor.exportAsImage(1, "Png").src);
-      console.log("Document changed, updated SFDT:", newContent);
-    }
-  };
   const insertTableWithData = () => {
     if (editorObj.current) {
       editorObj.current.documentEditor.open(JSON.stringify(data));
@@ -138,7 +110,6 @@ const DetailReport = () => {
         width="100%"
         enableToolbar={true}
         contentChange={ContentChange}
-        // documentChange={handleDocumentChange}
         serviceUrl="https://ej2services.syncfusion.com/production/web-services/api/documenteditor/"
       ></DocumentEditorContainerComponent>
     </Box>

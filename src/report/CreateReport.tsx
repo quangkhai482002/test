@@ -17,8 +17,6 @@ const CreateReport = () => {
   const [name, setName] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [imgUrl, setImgUrl] = useState<string>("");
-  const [shouldUpdateContent, setShouldUpdateContent] =
-    useState<boolean>(false); // State flag
   const handleCreateReport = async () => {
     try {
       setIsLoaded(true);
@@ -45,29 +43,19 @@ const CreateReport = () => {
     setImgUrl(editorObj.current?.documentEditor?.exportAsImage(1, "Png").src);
     console.log("Updated SFDT:", content);
   };
-  const handleDocumentChange = () => {
-    if (editorObj.current) {
-      const newContent = editorObj.current.documentEditor.serialize();
-      setContent(newContent);
-      setImgUrl(editorObj.current.documentEditor.exportAsImage(1, "Png").src);
-      console.log("Document changed, updated SFDT:", newContent);
-    }
-  };
   const insertTableWithData = () => {
     if (editorObj.current) {
       editorObj.current.documentEditor.open(JSON.stringify(data));
-      setShouldUpdateContent(true);
     }
   };
   useEffect(() => {
-    if (shouldUpdateContent && editorObj.current) {
+    if (editorObj.current) {
       const newContent = editorObj.current.documentEditor.serialize();
       setContent(newContent);
       setImgUrl(editorObj.current.documentEditor.exportAsImage(1, "Png").src);
       console.log("Content updated after insert:", newContent);
-      setShouldUpdateContent(false); // Reset flag
     }
-  }, [shouldUpdateContent]);
+  }, []);
   const navigate = useNavigate();
 
   return (
