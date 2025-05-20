@@ -3,6 +3,7 @@ import "./App.css";
 import Report from "./report";
 import CreateReport from "./report/CreateReport";
 import DetailReport from "./report/DetailReport";
+import LineChart from "./chart/Chart";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Route path="/" element={<Report />}></Route>
         <Route path="/create" element={<CreateReport />}></Route>
         <Route path="/edit/:id" element={<DetailReport />}></Route>
+        <Route path="/chart" element={<LineChart />}></Route>
       </Routes>
     </BrowserRouter>
   );
