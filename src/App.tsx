@@ -4,6 +4,7 @@ import Report from "./report";
 import CreateReport from "./report/CreateReport";
 import DetailReport from "./report/DetailReport";
 import LineChart from "./chart/Chart";
+import BubbleChart from "./chart/BubbleChart";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/create" element={<CreateReport />}></Route>
         <Route path="/edit/:id" element={<DetailReport />}></Route>
         <Route path="/chart" element={<LineChart />}></Route>
+        <Route path="/bubblechart" element={<BubbleChart />}></Route>
       </Routes>
     </BrowserRouter>
   );
