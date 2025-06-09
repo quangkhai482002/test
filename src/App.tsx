@@ -6,6 +6,7 @@ import DetailReport from "./report/DetailReport";
 import LineChart from "./chart/Chart";
 import BubbleChart from "./chart/BubbleChart";
 import LesMiserablesGraph from "./chart/graph";
+import TableSelect from "./tableSeclect/table-select";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/chart" element={<LineChart />}></Route>
         <Route path="/bubblechart" element={<BubbleChart />}></Route>
         <Route path="/graph" element={<LesMiserablesGraph />}></Route>
+        <Route path="/table" element={<TableSelect />}></Route>
       </Routes>
     </BrowserRouter>
   );
