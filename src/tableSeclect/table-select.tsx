@@ -74,10 +74,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell>{row.calories}</TableCell>
+        <TableCell>{row.fat}</TableCell>
+        <TableCell>{row.carbs}</TableCell>
+        <TableCell>{row.protein}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -104,8 +104,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                   <TableRow>
                     <TableCell>Date</TableCell>
                     <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Total price ($)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -115,33 +115,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                         {historyRow.date}
                       </TableCell>
                       <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
+                      <TableCell>{historyRow.amount}</TableCell>
+                      <TableCell>
                         {Math.round(historyRow.amount * row.price * 100) / 100}
                       </TableCell>
                     </TableRow>
@@ -173,28 +148,32 @@ const TableSelect = () => {
         justifyContent: "center",
       }}
     >
-      <TableContainer
-        component={Paper}
-        // sx={{
-        //   borderRadius: 2, // hoặc '16px'
-        //   overflow: "hidden", // giữ bo góc khi có nội dung tràn
-        // }}
-      >
+      <TableContainer component={Paper}>
         <Table
           aria-label="collapsible table"
           sx={{
-            borderCollapse: "separate",
-            borderSpacing: "0 16px", // Khoảng cách dọc giữa các dòng
+            tableLayout: "fixed", // Đảm bảo các cột có chiều rộng cố định
+            width: "100%",
           }}
         >
           <TableHead>
             <TableRow>
-              <TableCell />
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Calories</TableCell>
-              <TableCell align="right">Fat&nbsp;(g)</TableCell>
-              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+              <TableCell
+                sx={{
+                  width: "10%",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              />{" "}
+              {/* Cột mở rộng */}
+              <TableCell sx={{ width: "10%" }}>
+                Dessert (100g serving)
+              </TableCell>
+              <TableCell sx={{ width: "10%" }}>Calories</TableCell>
+              <TableCell sx={{ width: "10%" }}>Fat (g)</TableCell>
+              <TableCell sx={{ width: "20%" }}>Carbs (g)</TableCell>
+              <TableCell sx={{ width: "30%" }}>Protein (g)</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
