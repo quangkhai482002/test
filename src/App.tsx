@@ -7,6 +7,7 @@ import LineChart from "./chart/Chart";
 import BubbleChart from "./chart/BubbleChart";
 import LesMiserablesGraph from "./chart/graph";
 import TableSelect from "./tableSeclect/table-select";
+import DateScanList from "./calender/Calender";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/bubblechart" element={<BubbleChart />}></Route>
         <Route path="/graph" element={<LesMiserablesGraph />}></Route>
         <Route path="/table" element={<TableSelect />}></Route>
+        <Route path="/calendar" element={<DateScanList />}></Route>
       </Routes>
     </BrowserRouter>
   );
