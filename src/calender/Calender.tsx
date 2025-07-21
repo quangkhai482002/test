@@ -1,116 +1,153 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   Box,
-  Button,
+  Tabs,
+  Tab,
   Typography,
-  Grid,
-  Switch,
-  FormControlLabel,
+  Card,
+  CardContent,
+  Divider,
 } from "@mui/material";
-import { format, subDays, addDays } from "date-fns";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
-interface ScanDate {
-  date: string;
-  scanned: boolean;
-}
+const TimelineWithRelations = () => {
+  const [tabIndex, setTabIndex] = useState(0);
 
-const generateDateRange = (
-  startDate: Date,
-  totalDays: number,
-  scannedDates: string[]
-): ScanDate[] => {
-  return Array.from({ length: totalDays }, (_, i) => {
-    const date = subDays(startDate, i);
-    return {
-      date: format(date, "yyyy-MM-dd"),
-      scanned: scannedDates.includes(format(date, "yyyy-MM-dd")),
-    };
-  });
-};
+  const timelineItems = [
+    { label: "Tạo A", date: "2024-01-01" },
+    { label: "Cập nhật A", date: "2024-02-15" },
+    { label: "Tạo B", date: "2024-03-10" },
+  ];
 
-const fakeScannedDates = [
-  format(subDays(new Date(), 1), "yyyy-MM-dd"),
-  format(subDays(new Date(), 3), "yyyy-MM-dd"),
-  format(subDays(new Date(), 5), "yyyy-MM-dd"),
-  format(subDays(new Date(), 6), "yyyy-MM-dd"),
-];
-
-const DateScanList: React.FC = () => {
-  const [offset, setOffset] = useState(0); // để điều hướng next/prev
-  const [showScanned, setShowScanned] = useState(true);
-  const [showUnscanned, setShowUnscanned] = useState(true);
-
-  const today = useMemo(() => new Date(), []);
-  const startDate = subDays(today, offset);
-  const dateList = useMemo(() => {
-    return generateDateRange(startDate, 30, fakeScannedDates);
-  }, [offset]);
-
-  const filteredList = useMemo(() => {
-    return dateList.filter((item) => {
-      if (item.scanned && showScanned) return true;
-      if (!item.scanned && showUnscanned) return true;
-      return false;
-    });
-  }, [dateList, showScanned, showUnscanned]);
+  const relations = [
+    { from: "A", to: "B", date: "2024-04-01" },
+    { from: "B", to: "C", date: "2024-05-10" },
+    { from: "C", to: "D", date: "2024-06-01" },
+  ];
 
   return (
-    <Box p={3}>
-      <Typography variant="h5" gutterBottom>
-        Danh sách ngày quét (30 ngày)
-      </Typography>
-
-      <Box display="flex" gap={2} mb={2}>
-        <Button variant="contained" onClick={() => setOffset(offset + 30)}>
-          ← Trước
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => setOffset(Math.max(0, offset - 30))}
+    <Box display="flex" height="100vh">
+      {/* Left Column */}
+      <Box width="30%" borderRight="1px solid #ccc" p={2}>
+        <Tabs
+          value={tabIndex}
+          onChange={(e, newValue) => setTabIndex(newValue)}
         >
-          Sau →
-        </Button>
-      </Box>
+          <Tab label="Timeline" />
+          <Tab label="Detail" />
+        </Tabs>
 
-      <Box display="flex" gap={2} mb={2}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={showScanned}
-              onChange={(e) => setShowScanned(e.target.checked)}
-            />
-          }
-          label="Hiện ngày đã quét"
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={showUnscanned}
-              onChange={(e) => setShowUnscanned(e.target.checked)}
-            />
-          }
-          label="Hiện ngày chưa quét"
-        />
-      </Box>
+        <Divider sx={{ my: 2 }} />
 
-      <Grid container spacing={1}>
-        {filteredList.map((item) => (
-          <Grid item xs={12} sm={6} md={4} key={item.date}>
+        {tabIndex === 0 && (
+          <Box display="flex" flexDirection="column" position="relative" pl={4}>
+            {/* Vertical Line */}
             <Box
-              p={2}
-              borderRadius={2}
-              bgcolor={item.scanned ? "green.100" : "grey.300"}
-            >
-              <Typography fontWeight="bold">{item.date}</Typography>
-              <Typography variant="body2">
-                {item.scanned ? "Đã quét" : "Chưa quét"}
-              </Typography>
+              sx={{
+                position: "absolute",
+                left: "28px",
+                top: 0,
+                bottom: 0,
+                width: "4px",
+                backgroundColor: "#ccc",
+                zIndex: 1,
+              }}
+            />
+            {timelineItems.map((item, idx) => (
+              <Box key={idx} display="flex" alignItems="center" mb={3}>
+                {/* Timeline Dot */}
+                <Box
+                  sx={{
+                    width: "16px",
+                    height: "16px",
+                    borderRadius: "50%",
+                    backgroundColor: "#1976d2",
+                    position: "absolute",
+                    left: "20px",
+                    zIndex: 2,
+                  }}
+                />
+                {/* Timeline Item */}
+                <Card
+                  variant="outlined"
+                  sx={{ ml: 4, width: "100%", zIndex: 2 }}
+                >
+                  <CardContent>
+                    <Typography fontWeight={600}>{item.label}</Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      {item.date}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            ))}
+          </Box>
+        )}
+
+        {tabIndex === 1 && (
+          <Box>
+            <Typography variant="body1">
+              Chi tiết các đối tượng sẽ hiển thị ở đây, ví dụ:
+            </Typography>
+            <ul>
+              <li>A: Đối tượng người dùng</li>
+              <li>B: Đối tượng sự kiện</li>
+            </ul>
+          </Box>
+        )}
+      </Box>
+
+      {/* Right Column */}
+      <Box flex={1} p={4} overflow="auto">
+        <Typography variant="h6" gutterBottom>
+          Mối quan hệ giữa các đối tượng theo thời gian
+        </Typography>
+        <Box display="flex" flexDirection="column" position="relative" pl={4}>
+          {/* Vertical Line */}
+          <Box
+            sx={{
+              position: "absolute",
+              left: "28px",
+              top: 0,
+              bottom: 0,
+              width: "4px",
+              backgroundColor: "#ccc",
+              zIndex: 1,
+            }}
+          />
+          {relations.map((rel, idx) => (
+            <Box key={idx} display="flex" alignItems="center" mb={3}>
+              {/* Timeline Dot */}
+              <Box
+                sx={{
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: "50%",
+                  backgroundColor: "#1976d2",
+                  position: "absolute",
+                  left: "20px",
+                  zIndex: 2,
+                }}
+              />
+              {/* Relation Item */}
+              <Box display="flex" alignItems="center" gap={2} ml={4} zIndex={2}>
+                <Card variant="outlined" sx={{ px: 2, py: 1, minWidth: 60 }}>
+                  <Typography>{rel.from}</Typography>
+                </Card>
+                <ArrowForwardIcon color="action" />
+                <Card variant="outlined" sx={{ px: 2, py: 1, minWidth: 60 }}>
+                  <Typography>{rel.to}</Typography>
+                </Card>
+                <Typography variant="caption" color="text.secondary" ml={2}>
+                  {rel.date}
+                </Typography>
+              </Box>
             </Box>
-          </Grid>
-        ))}
-      </Grid>
+          ))}
+        </Box>
+      </Box>
     </Box>
   );
 };
 
-export default DateScanList;
+export default TimelineWithRelations;
