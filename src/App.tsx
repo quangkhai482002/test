@@ -9,6 +9,7 @@ import LesMiserablesGraph from "./chart/graph";
 import TableSelect from "./tableSeclect/table-select";
 import DateScanList from "./calender/Calender";
 import GraphComponent from "./graph/Graph";
+import ChipInput from "./Chipinput";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/table" element={<TableSelect />}></Route>
         <Route path="/calendar" element={<DateScanList />}></Route>
         <Route path="/network-graph" element={<GraphComponent />}></Route>
+        <Route path="/chip-input" element={<ChipInput />}></Route>
       </Routes>
     </BrowserRouter>
   );
