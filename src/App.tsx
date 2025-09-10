@@ -11,6 +11,8 @@ import DateScanList from "./calender/Calender";
 import GraphComponent from "./graph/Graph";
 import ChipInput from "./Chipinput";
 import CopyResult from "./CopyButton";
+import AutoGridCards from "./CardHL";
+import PackeryLayout from "./PackeryCard";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Route path="/calendar" element={<DateScanList />}></Route>
         <Route path="/network-graph" element={<GraphComponent />}></Route>
         <Route path="/chip-input" element={<ChipInput />}></Route>
+        <Route path="/card" element={<AutoGridCards />}></Route>
+        <Route path="/packery" element={<PackeryLayout />}></Route>
         <Route
           path="/copy-button"
           element={
