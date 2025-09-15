@@ -13,6 +13,7 @@ import ChipInput from "./Chipinput";
 import CopyResult from "./CopyButton";
 import AutoGridCards from "./CardHL";
 import PackeryLayout from "./PackeryCard";
+import CheckboxWithUrl from "./CheckBoxOption";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/chip-input" element={<ChipInput />}></Route>
         <Route path="/card" element={<AutoGridCards />}></Route>
         <Route path="/packery" element={<PackeryLayout />}></Route>
+        <Route path="/checkbox" element={<CheckboxWithUrl />}></Route>
         <Route
           path="/copy-button"
           element={
