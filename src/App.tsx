@@ -16,6 +16,7 @@ import AutoGridCards from "./CardHL";
 import PackeryLayout from "./PackeryCard";
 import CheckboxWithUrl from "./CheckBoxOption";
 import PostsWithScroll from "./PostsWithScroll";
+import BasicFlow from "./react-flow/ReactFlow";
 
 function App() {
   const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ function App() {
           <Route path="/card" element={<AutoGridCards />}></Route>
           <Route path="/packery" element={<PackeryLayout />}></Route>
           <Route path="/checkbox" element={<CheckboxWithUrl />}></Route>
+          <Route path="/react-flow" element={<BasicFlow />}></Route>
           <Route
             path="/posts-with-scroll"
             element={<PostsWithScroll />}
