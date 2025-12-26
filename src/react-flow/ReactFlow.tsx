@@ -65,7 +65,15 @@ export default function FlowWithFAB() {
 
   const onConnect = useCallback(
     (connection: Connection) => {
-      setEdges((eds) => addEdge({ ...connection, animated: true }, eds));
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...connection,
+            animated: true,
+          },
+          eds
+        )
+      );
     },
     [setEdges]
   );
@@ -210,6 +218,16 @@ export default function FlowWithFAB() {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
+        defaultEdgeOptions={{
+          animated: true,
+          markerEnd: {
+            type: "arrowclosed",
+            width: 24,
+            height: 24,
+            color: "#1976d2",
+          },
+          style: { strokeWidth: 2, stroke: "#0ea224ff" },
+        }}
       >
         <MiniMap />
         <Controls />

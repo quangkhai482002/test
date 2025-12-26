@@ -61,8 +61,8 @@ export const CustomNode = ({
         boxShadow: 3,
       }}
     >
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      <Handle type="target" position={Position.Right} />
+      <Handle type="source" position={Position.Left} />
 
       <Box
         display="flex"
@@ -91,14 +91,14 @@ export const CustomNode = ({
             placeholder="//input[@id='username']"
             sx={{ mb: 1.5 }}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             label="Description"
             size="small"
             value={data.description || ""}
             onChange={(e) => updateNodeData({ description: e.target.value })}
             placeholder="Mô tả hành động này"
-          />
+          /> */}
         </>
       )}
 
@@ -116,14 +116,7 @@ export const CustomNode = ({
             }
             sx={{ mb: 1.5 }}
           />
-          <TextField
-            fullWidth
-            label="Description"
-            size="small"
-            value={data.description || ""}
-            onChange={(e) => updateNodeData({ description: e.target.value })}
-            placeholder="Chờ sau khi submit..."
-          />
+          <Typography variant="caption">Chờ sau khi submit...</Typography>
         </>
       )}
 
