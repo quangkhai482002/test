@@ -27,6 +27,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { CustomNode } from "./CustomNode";
+import CustomEdgeWithDelete from "./CustomEdgeWithDelete";
 
 const initialNodes: Node[] = [
   {
@@ -50,6 +51,9 @@ const initialEdges: Edge[] = [];
 const nodeTypes: NodeTypes = {
   custom: CustomNode,
 };
+const edgeTypes = {
+  custom: CustomEdgeWithDelete, // tên loại edge là "custom"
+};
 
 let nodeId = 0;
 const getNodeId = () => `node_${nodeId++}`;
@@ -69,6 +73,7 @@ export default function FlowWithFAB() {
         addEdge(
           {
             ...connection,
+            type: "custom",
             animated: true,
           },
           eds
@@ -217,6 +222,7 @@ export default function FlowWithFAB() {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
         defaultEdgeOptions={{
           animated: true,
