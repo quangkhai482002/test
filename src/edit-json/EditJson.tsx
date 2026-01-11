@@ -25,8 +25,8 @@ function JsonEditor() {
         theme={vscodeDark}
         extensions={[
           json(), // JSON language support (highlighting, parsing)
-          lintGutter(), // Shows lint markers in gutter
-          linter(jsonParseLinter()), // Real-time JSON validation (errors highlighted)
+          // lintGutter(), // Shows lint markers in gutter
+          // linter(jsonParseLinter()), // Real-time JSON validation (errors highlighted)
           //   keymap.of([...defaultKeymap, indentWithTab]), // Standard shortcuts (including Tab indent)
         ]}
         onChange={(newValue) => setValue(newValue)}
@@ -36,3 +36,5 @@ function JsonEditor() {
 }
 
 export default JsonEditor;
+
+// npm install @uiw/react-codemirror @codemirror/lang-json @codemirror/lint @codemirror/commands @codemirror/theme-one-dark

@@ -19,6 +19,7 @@ import PostsWithScroll from "./PostsWithScroll";
 import BasicFlow from "./react-flow/ReactFlow";
 import JsonEditor from "./edit-json/EditJson";
 import JsonAceEditor from "./edit-json/JsonAceEditor";
+import CronBuilder from "./crontab";
 
 function App() {
   const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ function App() {
           <Route path="/react-flow" element={<BasicFlow />}></Route>
           <Route path="/edit-json" element={<JsonEditor />}></Route>
           <Route path="/json-ace" element={<JsonAceEditor />}></Route>
+          <Route path="/crontab" element={<CronBuilder />}></Route>
           <Route
             path="/posts-with-scroll"
             element={<PostsWithScroll />}
