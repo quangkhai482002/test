@@ -1,78 +1,44 @@
-// import { Stack, TextField } from "@mui/material";
-// import { useState } from "react";
-
-// export default function CronBuilder() {
-//   const [cron, setCron] = useState({
-//     minute: "*/5",
-//     hour: "*",
-//     day: "*",
-//     month: "*",
-//     weekDay: "*",
-//   });
-
-//   const cronString = `${cron.minute} ${cron.hour} ${cron.day} ${cron.month} ${cron.weekDay}`;
-
-//   const handleChange =
-//     (field: keyof typeof cron) => (e: React.ChangeEvent<HTMLInputElement>) => {
-//       setCron({ ...cron, [field]: e.target.value });
-//     };
-
-//   return (
-//     <Stack
-//       sx={{
-//         gap: 2,
-//         padding: 2,
-//       }}
-//     >
-//       <Stack direction="row" spacing={1}>
-//         <TextField
-//           label="Minute"
-//           value={cron.minute}
-//           onChange={handleChange("minute")}
-//         />
-//         <TextField
-//           label="Hour"
-//           value={cron.hour}
-//           onChange={handleChange("hour")}
-//         />
-//         <TextField
-//           label="Day"
-//           value={cron.day}
-//           onChange={handleChange("day")}
-//         />
-//         <TextField
-//           label="Month"
-//           value={cron.month}
-//           onChange={handleChange("month")}
-//         />
-//         <TextField
-//           label="Weekday"
-//           value={cron.weekDay}
-//           onChange={handleChange("weekDay")}
-//         />
-//       </Stack>
-
-//       <TextField
-//         label="Cron result"
-//         value={cronString}
-//         InputProps={{ readOnly: true }}
-//         fullWidth
-//       />
-//     </Stack>
-//   );
-// }
+const aliases: Record<string, string> = {
+  "@yearly": "0 0 1 1 *",
+  "@annually": "0 0 1 1 *",
+  "@monthly": "0 0 1 * *",
+  "@weekly": "0 0 * * 0",
+  "@daily": "0 0 * * *",
+  "@hourly": "0 * * * *",
+};
 
 import { TextField, Typography, Box } from "@mui/material";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { isValidCron } from "cron-validator";
+import cronstrue from "cronstrue";
+import parser from "cron-parser";
 
-export default function CronInputWithValidate() {
+export default function CronGuruLike() {
   const [cron, setCron] = useState("");
 
   const isValid = cron === "" || isValidCron(cron, { seconds: false });
 
+  const humanText = useMemo(() => {
+    if (!isValid || !cron) return "";
+    try {
+      return cronstrue.toString(cron, { locale: "vi" });
+    } catch {
+      return "";
+    }
+  }, [cron, isValid]);
+
+  const nextRuns = useMemo(() => {
+    if (!isValid || !cron) return [];
+    try {
+      const interval = parser.parse(cron);
+      return Array.from({ length: 5 }, () => interval.next().toString());
+    } catch {
+      return [];
+    }
+  }, [cron, isValid]);
+
   return (
-    <Box sx={{ width: "100%", maxWidth: 500 }}>
+    <Box sx={{ width: 500 }}>
       <TextField
         label="Cron expression"
         value={cron}
@@ -84,18 +50,30 @@ export default function CronInputWithValidate() {
             ? "Ví dụ: */5 * * * *"
             : "Cron expression không hợp lệ"
         }
-        size="small" // ← optional, looks cleaner for cron
+        size="small"
       />
 
-      {/* ← This is what you want */}
-      {cron && (
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ mt: 0.5, display: "block", fontFamily: "monospace" }}
-        >
-          Current value: <strong>{cron}</strong>
+      {/* Human readable */}
+      {humanText && (
+        <Typography variant="h6" sx={{ mt: 1 }}>
+          {humanText}
         </Typography>
+      )}
+
+      {/* Next runs */}
+      {nextRuns.length > 0 && (
+        <Box sx={{ mt: 1 }}>
+          <Typography variant="caption">Next runs:</Typography>
+          {nextRuns.map((d, i) => (
+            <Typography
+              key={i}
+              variant="caption"
+              sx={{ display: "block", fontFamily: "monospace" }}
+            >
+              {d}
+            </Typography>
+          ))}
+        </Box>
       )}
     </Box>
   );
