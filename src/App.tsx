@@ -20,6 +20,7 @@ import BasicFlow from "./react-flow/ReactFlow";
 import JsonEditor from "./edit-json/EditJson";
 import JsonAceEditor from "./edit-json/JsonAceEditor";
 import CronBuilder from "./crontab";
+import CustomCard from "./Card";
 
 function App() {
   const queryClient = new QueryClient();
@@ -70,6 +71,7 @@ function App() {
               />
             }
           ></Route>
+          <Route path="/custom-card" element={<CustomCard />}></Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
