@@ -1,22 +1,23 @@
 import React, { useEffect, useRef } from "react";
 import ReactECharts from "echarts-for-react";
 import * as echarts from "echarts";
+import { m } from "framer-motion";
 
 // 1. Dữ liệu thật
 const realData = [
   {
-    name: "User A",
-    value: 100,
+    name: "User AAAAAAAAAAAAAAAAAA",
+    value: 8.2,
     img: "https://grout.in/avatar/User+A.png?size=128&rounded=true",
   },
   {
     name: "User B",
-    value: 80,
+    value: 6,
     img: "https://grout.in/avatar/Alice.png?size=128&rounded=true&background=random",
   },
   {
     name: "User C",
-    value: 200,
+    value: 3,
     img: "https://grout.in/avatar/Alice.png?size=128&rounded=true&background=random",
   },
 ];
@@ -42,23 +43,25 @@ const BubbleCircleChart: React.FC = () => {
     const echartsRef = useRef<any>(null);
 
   useEffect(() => {
-    // Tạo hiệu ứng chuyển động nhẹ bằng cách cập nhật nhẹ thông số lực định kỳ
-    const timer = setInterval(() => {
-      if (echartsRef.current) {
-        const chartInstance = echartsRef.current.getEchartsInstance();
-        chartInstance.setOption({
-          series: [{
-            force: {
-              // Thay đổi nhẹ lực đẩy để các hạt rung rinh
-              repulsion: 150 + Math.random() * 50 
-            }
-          }]
-        });
-      }
-    }, 2000);
+  let step = 0;
+  const timer = setInterval(() => {
+    if (echartsRef.current) {
+      step += 0.1;
+      const chartInstance = echartsRef.current.getEchartsInstance();
+      chartInstance.setOption({
+        series: [{
+          force: {
+            // Thay đổi gravity cực nhỏ theo hàm sin để tạo nhịp thở
+            gravity: 0.03 + Math.cos(step) * 0.005 
+           
+          }
+        }]
+      });
+    }
+  }, 100); // Cập nhật nhanh hơn nhưng biên độ cực nhỏ = mượt hơn
 
-    return () => clearInterval(timer);
-  }, []);
+  return () => clearInterval(timer);
+}, []);
   // Hàm tính toán kích thước bubble
   const getSymbolSize = (value: number, isFake?: boolean) => {
     if (isFake) {
@@ -76,7 +79,7 @@ const BubbleCircleChart: React.FC = () => {
 
   const option: echarts.EChartsOption = {
     backgroundColor: "#1a1a1a", // Đổi nền tối cho nổi bật
-    animationDurationUpdate: 1500,
+    animationDurationUpdate: 3000,
     animationEasingUpdate: 'quinticInOut',
     tooltip: {
       show: true,
@@ -112,7 +115,10 @@ const BubbleCircleChart: React.FC = () => {
         },
         animationThreshold: 2000,
         progressive: 200,
+        animationDuration: 300,
+        animationEasing: 'cubicOut',
         draggable: true,
+        
         data: allData.map((item: any) => {
           const size = getSymbolSize(item.value, item.isFake);
 
@@ -125,12 +131,25 @@ const BubbleCircleChart: React.FC = () => {
             },
           };
 
+          const mainColor = "#00ff88";
+          const secondaryColor = "#005533";
+
+
           // Cấu hình RIÊNG cho node FAKE
           if (item.isFake) {
             node.itemStyle = {
-              color: "#00ff88",
-              opacity: 0.3, // Làm mờ đi
+              // color: "#00ff88",
+              color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
+                { offset: 0, color: "#aaffdd" },   // Điểm sáng nhất (highlight)
+                { offset: 0.5, color: mainColor }, // Màu chính
+                { offset: 1, color: secondaryColor } // Viền tối tạo độ khối
+              ]),
+              opacity: 0.6, // Làm mờ đi
               borderWidth: 0,
+              shadowBlur: 10 ,
+              shadowColor: mainColor,
+              shadowOffsetX: 0,
+              shadowOffsetY: 5, // Đổ bóng xuống dưới một chút cho cảm giác 3D
             };
             node.label = { show: false }; // Ẩn label
             node.tooltip = { show: false }; // Ẩn tooltip cấp độ node (chắc chắn hơn)
@@ -139,19 +158,31 @@ const BubbleCircleChart: React.FC = () => {
           else {
             const imgSize = size * 0.4;
             node.itemStyle = {
-              color: "#00ff88",
-              shadowBlur: 15,
-              shadowColor: "rgba(0, 255, 136, 0.7)",
+              color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
+                { offset: 0, color: "#aaffdd" },   // Điểm sáng nhất (highlight)
+                { offset: 0.5, color: mainColor }, // Màu chính
+                { offset: 1, color: secondaryColor } // Viền tối tạo độ khối
+              ]),
+              opacity: 1, // Làm mờ đi
+              borderWidth: 0,
+              shadowBlur: 30 ,
+              shadowColor: mainColor,
+              shadowOffsetX: 0,
+              shadowOffsetY: 5,
             };
             node.label = {
               show: true,
-              formatter: `{name|${item.name}}\n{img|}\n{value|${item.value}}`,
+              formatter: `{name|${item?.name?.length>10?item.name?.substring(0, 10) + "...":item.name}}\n{img|}\n{value|${item.value}}`,
               rich: {
                 name: {
-                  fontSize: size * 0.12,
+                  fontSize: size * 0.1,
                   color: "#000",
                   align: "center",
                   padding: [0, 0, 5, 0],
+                  width: size * 0.8,      // Giới hạn độ rộng của chữ bằng 80% bubble
+      overflow: "truncate",   // Tự động cắt và thêm dấu ...
+      ellipsis: "...",        // Ký tự hiển thị khi bị cắt
+      lineHeight: size * 0.15,
                 },
                 img: {
                   height: imgSize,
@@ -161,10 +192,30 @@ const BubbleCircleChart: React.FC = () => {
                   align: "center",
                 },
                 value: {
-                  fontSize: size * 0.1,
+                  fontSize: size * 0.08,
+                  lineHeight: 24,
                   color: "#333",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  borderRadius: 5,
                   align: "center",
-                  padding: [5, 0, 0, 0],
+                  padding: [2, 10, 2, 10],
+                  
+                },
+              },
+            };
+
+            node.emphasis = {
+              scale: 1.15,
+              itemStyle: {
+                shadowBlur: 40,
+                shadowColor: mainColor,
+              },
+              label: {
+                rich: {
+                  img: {
+                    width: imgSize * 1.12,
+                    height: imgSize * 1.12,
+                  },
                 },
               },
             };
