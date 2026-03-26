@@ -21,8 +21,11 @@
     "@mui/icons-material": "^6.4.5",
     "@mui/material": "^6.4.5",
     "@mui/x-data-grid": "^7.28.3",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "@syncfusion/ej2-react-documenteditor": "^28.2.6",
     "@tanstack/react-query": "^5.89.0",
+    "@types/three": "^0.183.1",
     "@uiw/codemirror-theme-vscode": "^4.25.4",
     "@uiw/react-codemirror": "^4.25.4",
     "@xyflow/react": "^12.10.0",
@@ -35,6 +38,7 @@
     "echarts": "^5.6.0",
     "echarts-for-react": "^3.0.2",
     "file-saver": "^2.0.5",
+    "framer-motion": "^12.38.0",
     "html2canvas": "^1.4.1",
     "lodash": "^4.17.21",
     "packery": "^3.0.0",
@@ -42,7 +46,8 @@
     "react-ace": "^14.0.1",
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.21.1",
-    "recharts": "^2.15.1"
+    "recharts": "^2.15.1",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",

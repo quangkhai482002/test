@@ -113,7 +113,7 @@ export default function CustomCard(
       /> */}
 
       {/* Content */}
-      <CardContent>Thướng thằng cầy</CardContent>
+      <CardContent>Met moi</CardContent>
     </Card>
   );
 }
