@@ -37,21 +37,21 @@ const data: TreeNode[] = [
 ];
 
 const TreemapChart: React.FC = () => {
-    const chartRef = useRef<any>(null);
-    useEffect(() => {
-        const handleResize = () => {
-            if (chartRef.current) {
-                const chartInstance = chartRef.current.getEchartsInstance();
-                chartInstance.resize();
-            }
-        };
+    // const chartRef = useRef<any>(null);
+    // useEffect(() => {
+    //     const handleResize = () => {
+    //         if (chartRef.current) {
+    //             const chartInstance = chartRef.current.getEchartsInstance();
+    //             chartInstance.resize();
+    //         }
+    //     };
 
-        window.addEventListener("resize", handleResize);
-        // Gọi ngay lần đầu để fix lỗi không full width khi load
-        setTimeout(handleResize, 100); 
+    //     window.addEventListener("resize", handleResize);
+    //     // Gọi ngay lần đầu để fix lỗi không full width khi load
+    //     setTimeout(handleResize, 100); 
 
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    //     return () => window.removeEventListener("resize", handleResize);
+    // }, []);
     const option: echarts.EChartsOption = {
         tooltip: {
             formatter: "{b}: {c}",
@@ -98,7 +98,7 @@ const TreemapChart: React.FC = () => {
   <ReactECharts option={option} style={{ width: "100%", height: "100%" }} 
 //   notMerge={true}
 //   lazyUpdate={true}
-ref={chartRef}
+// ref={chartRef}
 //   opts={{ renderer: 'canvas' }}
   />
 </Box>

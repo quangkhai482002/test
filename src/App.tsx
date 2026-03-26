@@ -23,6 +23,7 @@ import CronBuilder from "./crontab";
 import CustomCard from "./Card";
 import AnimatedGlowingRing from "./AnimatedGlowingRing";
 import TreemapChart from "./Treemap";
+import BubbleCircleChart from "./Mmchart";
 
 function App() {
   const queryClient = new QueryClient();
@@ -76,6 +77,7 @@ function App() {
           <Route path="/custom-card" element={<CustomCard />}></Route>
           <Route path="/animated-lowing-ring" element={<AnimatedGlowingRing />}></Route>
           <Route path="/tree-map" element={<TreemapChart />}></Route>
+          <Route path="/bubble-circle-chart" element={<BubbleCircleChart />}></Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
