@@ -22,6 +22,7 @@ import JsonAceEditor from "./edit-json/JsonAceEditor";
 import CronBuilder from "./crontab";
 import CustomCard from "./Card";
 import AnimatedGlowingRing from "./AnimatedGlowingRing";
+import TreemapChart from "./Treemap";
 
 function App() {
   const queryClient = new QueryClient();
@@ -74,8 +75,7 @@ function App() {
           ></Route>
           <Route path="/custom-card" element={<CustomCard />}></Route>
           <Route path="/animated-lowing-ring" element={<AnimatedGlowingRing />}></Route>
-
-
+          <Route path="/tree-map" element={<TreemapChart />}></Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
