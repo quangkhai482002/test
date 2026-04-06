@@ -24,6 +24,8 @@ import CustomCard from "./Card";
 import AnimatedGlowingRing from "./AnimatedGlowingRing";
 import TreemapChart from "./Treemap";
 import BubbleCircleChart from "./Mmchart";
+import Node3DScene from "./Node3DScene";
+import ThreeCircleNodes from "./ThreeCircleNodes";
 
 function App() {
   const queryClient = new QueryClient();
@@ -78,6 +80,8 @@ function App() {
           <Route path="/animated-lowing-ring" element={<AnimatedGlowingRing />}></Route>
           <Route path="/tree-map" element={<TreemapChart />}></Route>
           <Route path="/bubble-circle-chart" element={<BubbleCircleChart />}></Route>
+           <Route path="/3d-scene" element={<Node3DScene />}></Route>
+           <Route path="/three-circle-nodes" element={<ThreeCircleNodes />}></Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

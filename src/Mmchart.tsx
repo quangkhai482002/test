@@ -1,7 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import ReactECharts from "echarts-for-react";
 import * as echarts from "echarts";
-import { m } from "framer-motion";
+import ReactECharts from "echarts-for-react";
+import React, { useEffect, useRef } from "react";
 
 // 1. Dữ liệu thật
 const realData = [
@@ -18,7 +17,12 @@ const realData = [
   {
     name: "User C",
     value: 3,
-    img: "https://grout.in/avatar/Alice.png?size=128&rounded=true&background=random",
+    img: "https://fastly.picsum.photos/id/118/300/300.jpg?hmac=y5ogOME73iMgH2ExOcgp4s7H59GHjryoeyqvOwb0oeY",
+  },
+   {
+    name: "User D",
+    value: 3,
+    img: "abc",
   },
 ];
 
@@ -40,28 +44,28 @@ const FAKE_MAX_SIZE = 60;
 
 const BubbleCircleChart: React.FC = () => {
 
-    const echartsRef = useRef<any>(null);
+  const echartsRef = useRef<any>(null);
 
   useEffect(() => {
-  let step = 0;
-  const timer = setInterval(() => {
-    if (echartsRef.current) {
-      step += 0.1;
-      const chartInstance = echartsRef.current.getEchartsInstance();
-      chartInstance.setOption({
-        series: [{
-          force: {
-            // Thay đổi gravity cực nhỏ theo hàm sin để tạo nhịp thở
-            gravity: 0.03 + Math.cos(step) * 0.005 
-           
-          }
-        }]
-      });
-    }
-  }, 100); // Cập nhật nhanh hơn nhưng biên độ cực nhỏ = mượt hơn
+    let step = 0;
+    const timer = setInterval(() => {
+      if (echartsRef.current) {
+        step += 0.1;
+        const chartInstance = echartsRef.current.getEchartsInstance();
+        chartInstance.setOption({
+          series: [{
+            force: {
+              // Thay đổi gravity cực nhỏ theo hàm sin để tạo nhịp thở
+              gravity: 0.03 + Math.cos(step) * 0.005
 
-  return () => clearInterval(timer);
-}, []);
+            }
+          }]
+        });
+      }
+    }, 100); // Cập nhật nhanh hơn nhưng biên độ cực nhỏ = mượt hơn
+
+    return () => clearInterval(timer);
+  }, []);
   // Hàm tính toán kích thước bubble
   const getSymbolSize = (value: number, isFake?: boolean) => {
     if (isFake) {
@@ -118,7 +122,7 @@ const BubbleCircleChart: React.FC = () => {
         animationDuration: 300,
         animationEasing: 'cubicOut',
         draggable: true,
-        
+
         data: allData.map((item: any) => {
           const size = getSymbolSize(item.value, item.isFake);
 
@@ -146,14 +150,14 @@ const BubbleCircleChart: React.FC = () => {
               ]),
               opacity: 0.6, // Làm mờ đi
               borderWidth: 0,
-              shadowBlur: 10 ,
+              shadowBlur: 10,
               shadowColor: mainColor,
               shadowOffsetX: 0,
               shadowOffsetY: 5, // Đổ bóng xuống dưới một chút cho cảm giác 3D
             };
             node.label = { show: false }; // Ẩn label
             node.tooltip = { show: false }; // Ẩn tooltip cấp độ node (chắc chắn hơn)
-          } 
+          }
           // Cấu hình RIÊNG cho node THẬT
           else {
             const imgSize = size * 0.4;
@@ -165,14 +169,14 @@ const BubbleCircleChart: React.FC = () => {
               ]),
               opacity: 1, // Làm mờ đi
               borderWidth: 0,
-              shadowBlur: 30 ,
+              shadowBlur: 30,
               shadowColor: mainColor,
               shadowOffsetX: 0,
               shadowOffsetY: 5,
             };
             node.label = {
               show: true,
-              formatter: `{name|${item?.name?.length>10?item.name?.substring(0, 10) + "...":item.name}}\n{img|}\n{value|${item.value}}`,
+              formatter: `{name|${item?.name?.length > 10 ? item.name?.substring(0, 10) + "..." : item.name}}\n{img|}\n{value|${item.value}}`,
               rich: {
                 name: {
                   fontSize: size * 0.1,
@@ -180,15 +184,22 @@ const BubbleCircleChart: React.FC = () => {
                   align: "center",
                   padding: [0, 0, 5, 0],
                   width: size * 0.8,      // Giới hạn độ rộng của chữ bằng 80% bubble
-      overflow: "truncate",   // Tự động cắt và thêm dấu ...
-      ellipsis: "...",        // Ký tự hiển thị khi bị cắt
-      lineHeight: size * 0.15,
+                  overflow: "truncate",   // Tự động cắt và thêm dấu ...
+                  ellipsis: "...",        // Ký tự hiển thị khi bị cắt
+                  lineHeight: size * 0.15,
                 },
                 img: {
-                  height: imgSize,
-                  width: imgSize,
-                  borderRadius: imgSize / 2,
-                  backgroundColor: { image: item.img },
+                  // height: imgSize,
+                  // width: imgSize,
+                  height: 10,
+                  width: 10,
+                  borderRadius: '50%',
+                  // padding: 10,
+                  
+                  margin : [5, 0, 5, 0],
+                  backgroundColor: { 
+                    image: item.img 
+                  },
                   align: "center",
                 },
                 value: {
@@ -199,7 +210,7 @@ const BubbleCircleChart: React.FC = () => {
                   borderRadius: 5,
                   align: "center",
                   padding: [2, 10, 2, 10],
-                  
+
                 },
               },
             };
@@ -229,10 +240,10 @@ const BubbleCircleChart: React.FC = () => {
 
   return (
     <div style={{ width: "100%", height: "600px", padding: "20px" }}>
-      <ReactECharts 
-      ref={echartsRef}
-        option={option} 
-        style={{ height: "100%" }} 
+      <ReactECharts
+        ref={echartsRef}
+        option={option}
+        style={{ height: "100%" }}
         opts={{ renderer: 'svg' }} // Dùng SVG cho mượt khi có nhiều node nhỏ
       />
     </div>
